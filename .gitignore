@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+
+server/node_modules/
+server/package-lock.json
+server/yarn.lock
+
+server/.env/
+
+logs/
+*.log
+*.tmp
