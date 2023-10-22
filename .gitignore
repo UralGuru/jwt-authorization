@@ -5,7 +5,7 @@ server/node_modules/
 server/package-lock.json
 server/yarn.lock
 
-server/.env/
+server/.env
 
 logs/
 *.log
