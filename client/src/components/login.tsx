@@ -29,7 +29,7 @@ const Login: FC = () => {
             <button onClick={() => store.login(email || "", password || "")}>
                 Login
             </button>
-            <button onClick={() => store.login(email || "", password || "")}>
+            <button onClick={() => store.registration(email || "", password || "")}>
                 Registration
             </button>
         </div>
