@@ -26,16 +26,34 @@ class UserService {
             ...tokens,
             user: userDto
         }
-    }
+    };
 
     async activate(activationLink) {
-        console.log(activationLink);
         const user = await userModel.findOne({ activationLink });
         if (!user) {
             throw ApiError.BadRequest("Некорректная ссылка активации")
         };
         user.isActivated = true;
         await user.save();
+    };
+
+    async login(email, password) {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} не найден`)
+        };
+        const isPasswordEquals = await bcrypt.compare(password, user.password);
+        if (!isPasswordEquals) {
+            throw ApiError.BadRequest(`Неверный пароль`)
+        };
+        const userDto = new UserDto(user);
+        const tokens = tokenService.generateTokens({ userDto });
+        await tokenService.saveToken(UserDto.id, tokens.refreshToken);
+
+        return {
+            ...tokens,
+            user: userDto
+        }
     }
 };
 
