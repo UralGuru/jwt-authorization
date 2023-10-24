@@ -1,8 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
+import { Context } from '../main';
 
 const Login: FC = () => {
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
+
+    const { store } = useContext(Context)
 
     return (
         <div>
@@ -23,8 +26,12 @@ const Login: FC = () => {
             </div>
 
 
-            <button>Login </button>
-            <button>Registration </button>
+            <button onClick={() => store.login(email || "", password || "")}>
+                Login
+            </button>
+            <button onClick={() => store.login(email || "", password || "")}>
+                Registration
+            </button>
         </div>
     )
 };
