@@ -47,7 +47,7 @@ class UserService {
             throw ApiError.BadRequest(`Неверный пароль`)
         };
         const userDto = new UserDto(user);
-        const tokens = tokenService.generateTokens({ userDto });
+        const tokens = tokenService.generateTokens({ ...userDto });
         await tokenService.saveToken(UserDto.id, tokens.refreshToken);
 
         return {
@@ -60,6 +60,28 @@ class UserService {
         const token = await tokenService.removeToken(refreshToken);
         return token;
 
+    };
+
+    async refresh(refreshToken) {
+        if (!refreshToken) {
+            throw ApiError.UnauthorizedError();
+        };
+
+        const userData = tokenService.validateRefreshToken(refreshToken);
+        const tokenFromDb = tokenService.findToken(refreshToken);
+        if (!userData || !tokenFromDb) {
+            throw ApiError.UnauthorizedError();
+        };
+
+        const user = await userModel.findById(userData.id);
+        const userDto = new UserDto(user);
+        const tokens = tokenService.generateTokens({ ...userDto });
+        await tokenService.saveToken(UserDto.id, tokens.refreshToken);
+
+        return {
+            ...tokens,
+            user: userDto
+        }
     };
 };
 
